@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ITRO - Quản lý hợp đồng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 1;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 60px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 200, 100, 0.2) 0%, rgba(255, 100, 50, 0.1) 100%);
+            clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .services-section {
+            padding: 80px 60px;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .btn-white {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .contract-list {
+            border: 1px solid #eee;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .contract-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid #f4f4f4;
+        }
+
+        .contract-row:last-child {
+            border-bottom: none;
+        }
+
+        .contract-actions button {
+            margin-left: 10px;
+        }
+
+        .notice {
+            text-align: center;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            background: #fafafa;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 30px;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                margin-left: 0;
+                gap: 20px;
+                flex-basis: 100%;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+
+            .page-header {
+                padding: 40px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .services-section {
+                padding: 50px 30px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .contract-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .contract-actions {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">DDMN </div>
+        <nav>
+            <a href="trangchinh.html">Trang chính</a>
+            <a href="dichvu.html">Dịch vụ</a>
+            <a href="phong.html">Phòng</a>
+            <a href="khachthue.html">Khách Thuê</a>
+            <a href="hopdong.html">Hợp đồng</a>
+            <a href="hoadon.html">Hóa đơn</a>
+            <a href="taikhoan.html">Tài khoản</a>
+        </nav>
+        <div class="auth-buttons" id="auth-links">
+            <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1>Quản lý hợp đồng</h1>
+            <p>Ghi nhận, theo dõi trạng thái và gia hạn hợp đồng thuê phòng.</p>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="section-title">
+            <h2>Danh sách hợp đồng</h2>
+            <p>Quản lý hợp đồng từ lúc soạn thảo đến khi kết thúc hoặc chấm dứt.</p>
+        </div>
+
+        <div class="notice" id="contract-notice"></div>
+
+        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin-bottom:40px;">
+            <div style="flex:1; min-width:320px; max-width:520px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="margin:0;">Thông tin hợp đồng</h3>
+                    <button class="btn-white" onclick="showContractForm()">Tạo hợp đồng mới</button>
+                </div>
+
+                <div id="contract-form" style="display:none; background:#f9f9f9; padding:20px; border-radius:14px; border:1px solid #eee;">
+                    <h4 id="contract-form-title" style="margin-top:0;">Tạo hợp đồng</h4>
+                    <div style="display:grid; gap:12px;">
+                        <label>
+                            <span style="font-weight:600;">Mã hợp đồng</span>
+                            <input id="contract-id" type="text" placeholder="VD: HD001" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Khách thuê</span>
+                            <select id="contract-tenant" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></select>
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Phòng</span>
+                            <select id="contract-room" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></select>
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Ngày bắt đầu</span>
+                            <input id="contract-start" type="date" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Ngày kết thúc</span>
+                            <input id="contract-end" type="date" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Tiền cọc (VNĐ)</span>
+                            <input id="contract-deposit" type="number" placeholder="Ví dụ: 1000000" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:10px;">
+                            <button class="btn-white" onclick="hideContractForm()" type="button" style="background:#eee; color:#333;">Hủy</button>
+                            <button class="btn-white" onclick="saveContract()" type="button">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex:1; min-width:320px; max-width:700px;">
+                <h3 style="margin-top:0;">Danh sách hợp đồng</h3>
+                <div class="contract-list" id="contract-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 ITRO - Giải Pháp Quản Lý Nhà Cho Thuê</p>
+        <p>Thiết kế để giúp bạn quản lý kinh doanh một cách chuyên nghiệp</p>
+    </footer>
+
+    <script>
+        const contractsKey = 'itro_contracts';
+        const roomsKey = 'itro_rooms';
+        const tenantsKey = 'itro_tenants';
+        const accountsKey = 'itro_accounts';
+        const sessionKey = 'itro_currentUser';
+
+        const STATUS = {
+            DRAFT: 'Dự thảo',
+            ACTIVE: 'Có hiệu lực',
+            NEAR_EXPIRE: 'Sắp hết hạn',
+            EXPIRED: 'Đã kết thúc',
+            TERMINATED: 'Chấm dứt sớm',
+        };
+
+        let contracts = [];
+        let rooms = [];
+        let tenants = [];
+        let editingContractId = null;
+
+        function getSaved(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function save(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function showNotice(message, isError = false) {
+            const notice = document.getElementById('contract-notice');
+            notice.style.display = 'block';
+            notice.style.borderColor = isError ? '#f5a0a0' : '#bde5b8';
+            notice.style.background = isError ? '#fff1f1' : '#f5fff5';
+            notice.textContent = message;
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3200);
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(localStorage.getItem(sessionKey) || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function ensureDefaultAccounts() {
+            const saved = getSaved(accountsKey);
+            if (!Array.isArray(saved) || !saved.length) {
+                const defaultAccounts = [
+                    { username: 'admin', email: 'admin@itro.com', password: '123456', role: 'admin', status: 'active' },
+                    { username: 'user1', email: 'user1@itro.com', password: '123456', role: 'user', status: 'active' },
+                ];
+                save(accountsKey, defaultAccounts);
+            }
+        }
+
+        function requireLogin() {
+            const current = getCurrentUser();
+            return Boolean(current && current.username);
+        }
+
+        function requireAdmin() {
+            ensureDefaultAccounts();
+            const current = getCurrentUser();
+            if (!current || !current.username) return false;
+
+            const accounts = getSaved(accountsKey) || [];
+            const me = accounts.find((a) => a.username === current.username);
+            return Boolean(me && me.role === 'admin');
+        }
+
+        function checkAccess() {
+            if (!requireLogin()) {
+                showNotice('Bạn cần đăng nhập để xem hợp đồng. Vui lòng đăng nhập.', true);
+                return false;
+            }
+
+            if (!requireAdmin()) {
+                showNotice('Bạn cần quyền quản lý để xem hợp đồng.', true);
+                return false;
+            }
+
+            return true;
+        }
+
+        function logout() {
+            localStorage.removeItem(sessionKey);
+            window.location.href = 'dangnhap.html';
+        }
+
+        function renderHeader() {
+            const authLinks = document.getElementById('auth-links');
+            const user = getCurrentUser();
+            if (!authLinks) return;
+            if (user && user.username) {
+                authLinks.innerHTML = `
+                    <span style="font-weight:600; color:#333; margin-right:12px;">Xin chào, ${user.username}</span>
+                    <a href="#" onclick="logout()" class="login-btn" style="border-color:#ff6b35;">Đăng xuất</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+                    <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+                `;
+            }
+        }
+
+        function initRooms() {
+            const saved = getSaved(roomsKey);
+            if (Array.isArray(saved) && saved.length) {
+                rooms = saved;
+            } else {
+                rooms = [
+                    { id: 'P001', type: 'Đơn', status: 'Trống' },
+                    { id: 'P002', type: 'Đơn', status: 'Trống' },
+                    { id: 'P003', type: 'Đơn', status: 'Trống' },
+                ];
+                save(roomsKey, rooms);
+            }
+        }
+
+        function initTenants() {
+            const saved = getSaved(tenantsKey);
+            if (Array.isArray(saved)) {
+                tenants = saved;
+            } else {
+                tenants = [];
+                save(tenantsKey, tenants);
+            }
+        }
+
+        function initContracts() {
+            const saved = getSaved(contractsKey);
+            if (Array.isArray(saved)) {
+                contracts = saved;
+            } else {
+                contracts = [];
+                save(contractsKey, contracts);
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const d = new Date(dateString);
+            return d.toLocaleDateString('vi-VN');
+        }
+
+        function findRoom(id) {
+            return rooms.find((r) => r.id === id);
+        }
+
+        function findTenant(id) {
+            return tenants.find((t) => t.id === id);
+        }
+
+        function updateRoomStatus(roomId, status) {
+            const idx = rooms.findIndex((r) => r.id === roomId);
+            if (idx === -1) return;
+            rooms[idx].status = status;
+            save(roomsKey, rooms);
+        }
+
+        function updateContractStates() {
+            const now = new Date();
+
+            contracts = contracts.map((contract) => {
+                if (contract.status === STATUS.TERMINATED || contract.status === STATUS.EXPIRED) {
+                    return contract;
+                }
+
+                const end = new Date(contract.endDate);
+                const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+
+                if (contract.status === STATUS.ACTIVE || contract.status === STATUS.NEAR_EXPIRE) {
+                    if (daysLeft < 0) {
+                        contract.status = STATUS.EXPIRED;
+                        updateRoomStatus(contract.roomId, 'Trống');
+                    } else if (daysLeft <= 30) {
+                        contract.status = STATUS.NEAR_EXPIRE;
+                    } else {
+                        contract.status = STATUS.ACTIVE;
+                    }
+                }
+
+                return contract;
+            });
+
+            save(contractsKey, contracts);
+        }
+
+        function renderContractList() {
+            const container = document.getElementById('contract-list');
+
+            if (!contracts.length) {
+                container.innerHTML = `
+                    <div style="padding:20px; text-align:center; color:#666;">Chưa có hợp đồng nào. Hãy tạo hợp đồng mới.</div>
+                `;
+                return;
+            }
+
+            const rows = contracts
+                .slice()
+                .reverse()
+                .map((contract) => {
+                    const room = findRoom(contract.roomId);
+                    const tenant = findTenant(contract.tenantId);
+                    const statusClass = contract.status === STATUS.ACTIVE ? 'color: #17964c;' : contract.status === STATUS.NEAR_EXPIRE ? 'color:#c47d00;' : contract.status === STATUS.EXPIRED ? 'color:#777;' : 'color:#c22323;';
+                    const actions = [];
+
+                    if (contract.status === STATUS.DRAFT) {
+                        actions.push(`<button onclick="activateContract('${contract.id}')">Ký hợp đồng</button>`);
+                    }
+
+                    if ([STATUS.ACTIVE, STATUS.NEAR_EXPIRE].includes(contract.status)) {
+                        actions.push(`<button onclick="terminateContract('${contract.id}')" style="color:#c00;">Chấm dứt</button>`);
+                        actions.push(`<button onclick="renewContract('${contract.id}')">Gia hạn</button>`);
+                    }
+
+                    if (contract.status === STATUS.EXPIRED) {
+                        actions.push(`<button onclick="renewContract('${contract.id}')">Gia hạn</button>`);
+                    }
+
+                    return `
+                        <div class="contract-row">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">${contract.id} — ${tenant ? tenant.name : contract.tenantId} (${room ? room.id : contract.roomId})</div>
+                                <div style="font-size:13px; color:#555;">${formatDate(contract.startDate)} → ${formatDate(contract.endDate)} • Trạng thái: <span style="${statusClass}">${contract.status}</span></div>
+                            </div>
+                            <div class="contract-actions" style="display:flex; gap:8px;">
+                                ${actions.join('')}
+                                <button onclick="viewContract('${contract.id}')">Xem</button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            container.innerHTML = rows;
+        }
+
+        function resetContractForm() {
+            editingContractId = null;
+            document.getElementById('contract-form-title').innerText = 'Tạo hợp đồng';
+            document.getElementById('contract-id').value = '';
+            document.getElementById('contract-tenant').value = '';
+            document.getElementById('contract-room').value = '';
+            document.getElementById('contract-start').value = '';
+            document.getElementById('contract-end').value = '';
+            document.getElementById('contract-deposit').value = '';
+
+            renderTenantOptions();
+            renderRoomOptions();
+        }
+
+        function showContractForm() {
+            resetContractForm();
+            document.getElementById('contract-form').style.display = 'block';
+        }
+
+        function hideContractForm() {
+            document.getElementById('contract-form').style.display = 'none';
+        }
+
+        function renderTenantOptions() {
+            const select = document.getElementById('contract-tenant');
+            select.innerHTML = '';
+
+            if (!tenants.length) {
+                select.innerHTML = '<option value="">(Chưa có khách thuê)</option>';
+                return;
+            }
+
+            select.innerHTML = tenants
+                .map((t) => `<option value="${t.id}">${t.name} (${t.id})</option>`)
+                .join('');
+        }
+
+        function renderRoomOptions() {
+            const select = document.getElementById('contract-room');
+            select.innerHTML = '';
+            const available = rooms.filter((r) => r.status === 'Trống');
+            if (!available.length) {
+                select.innerHTML = '<option value="">(Không còn phòng trống)</option>';
+                return;
+            }
+            select.innerHTML = available.map((r) => `<option value="${r.id}">${r.id} (${r.type})</option>`).join('');
+        }
+
+        function saveContract() {
+            const id = document.getElementById('contract-id').value.trim();
+            const tenantId = document.getElementById('contract-tenant').value;
+            const roomId = document.getElementById('contract-room').value;
+            const startDate = document.getElementById('contract-start').value;
+            const endDate = document.getElementById('contract-end').value;
+            const deposit = Number(document.getElementById('contract-deposit').value || 0);
+
+            if (!id || !tenantId || !roomId || !startDate || !endDate || deposit <= 0) {
+                showNotice('Vui lòng nhập đầy đủ thông tin hợp lệ.', true);
+                return;
+            }
+
+            if (new Date(endDate) <= new Date(startDate)) {
+                showNotice('Ngày kết thúc phải lớn hơn ngày bắt đầu.', true);
+                return;
+            }
+
+            const existing = contracts.find((c) => c.id === id);
+
+            if (editingContractId) {
+                const idx = contracts.findIndex((c) => c.id === editingContractId);
+                if (idx === -1) {
+                    showNotice('Không tìm thấy hợp đồng cần sửa.', true);
+                    return;
+                }
+
+                contracts[idx] = {
+                    ...contracts[idx],
+                    tenantId,
+                    roomId,
+                    startDate,
+                    endDate,
+                    deposit,
+                };
+                showNotice('Cập nhật hợp đồng thành công.');
+            } else {
+                if (existing) {
+                    showNotice('Mã hợp đồng đã tồn tại.', true);
+                    return;
+                }
+
+                contracts.push({
+                    id,
+                    tenantId,
+                    roomId,
+                    startDate,
+                    endDate,
+                    deposit,
+                    status: STATUS.DRAFT,
+                });
+                showNotice('Tạo hợp đồng mới thành công. Vui lòng ký hợp đồng để có hiệu lực.');
+            }
+
+            save(contractsKey, contracts);
+            renderContractList();
+            hideContractForm();
+        }
+
+        function viewContract(id) {
+            const contract = contracts.find((c) => c.id === id);
+            if (!contract) {
+                showNotice('Không tìm thấy hợp đồng.', true);
+                return;
+            }
+
+            const tenant = findTenant(contract.tenantId);
+            const room = findRoom(contract.roomId);
+            alert(`Mã: ${contract.id}\nKhách: ${tenant ? tenant.name : contract.tenantId}\nPhòng: ${room ? room.id : contract.roomId}\nBắt đầu: ${formatDate(contract.startDate)}\nKết thúc: ${formatDate(contract.endDate)}\nTiền cọc: ${contract.deposit.toLocaleString()} VND\nTrạng thái: ${contract.status}`);
+        }
+
+        function activateContract(id) {
+            const idx = contracts.findIndex((c) => c.id === id);
+            if (idx === -1) return;
+
+            const contract = contracts[idx];
+            if (contract.status !== STATUS.DRAFT) {
+                showNotice('Chỉ hợp đồng ở trạng thái Dự thảo mới có thể ký.', true);
+                return;
+            }
+
+            const room = findRoom(contract.roomId);
+            if (!room || room.status !== 'Trống') {
+                showNotice('Phòng không hợp lệ hoặc đã được thuê.', true);
+                return;
+            }
+
+            contracts[idx].status = STATUS.ACTIVE;
+            updateRoomStatus(contract.roomId, 'Đang thuê');
+            save(contractsKey, contracts);
+            showNotice('Hợp đồng đã được ký và có hiệu lực.');
+            updateContractStates();
+            renderContractList();
+        }
+
+        function terminateContract(id) {
+            const idx = contracts.findIndex((c) => c.id === id);
+            if (idx === -1) return;
+            const contract = contracts[idx];
+
+            if (![STATUS.ACTIVE, STATUS.NEAR_EXPIRE].includes(contract.status)) {
+                showNotice('Chỉ hợp đồng đang hiệu lực mới có thể chấm dứt sớm.', true);
+                return;
+            }
+
+            if (!confirm('Bạn có chắc muốn chấm dứt hợp đồng này sớm?')) return;
+
+            contracts[idx].status = STATUS.TERMINATED;
+            updateRoomStatus(contract.roomId, 'Trống');
+            save(contractsKey, contracts);
+            showNotice('Hợp đồng đã được chấm dứt. Phòng chuyển sang trạng thái trống.');
+            renderContractList();
+        }
+
+        function renewContract(id) {
+            const idx = contracts.findIndex((c) => c.id === id);
+            if (idx === -1) return;
+            const contract = contracts[idx];
+
+            const currentEnd = new Date(contract.endDate);
+            const nextEnd = new Date(currentEnd);
+            nextEnd.setDate(nextEnd.getDate() + 30);
+
+            contracts[idx].endDate = nextEnd.toISOString().slice(0, 10);
+            contracts[idx].status = STATUS.ACTIVE;
+            updateRoomStatus(contract.roomId, 'Đang thuê');
+            save(contractsKey, contracts);
+            showNotice('Hợp đồng đã được gia hạn 30 ngày.');
+            updateContractStates();
+            renderContractList();
+        }
+
+        function init() {
+            ensureDefaultAccounts();
+            renderHeader();
+
+            initRooms();
+            initTenants();
+            initContracts();
+
+            updateContractStates();
+            renderContractList();
+            resetContractForm();
+
+            checkAccess();
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

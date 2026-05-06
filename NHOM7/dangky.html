@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <!-- 
+      FILE: dangky.html
+      INTENT: Cung cấp giao diện đăng ký tài khoản cho hệ thống ITRO.
+      STRATEGIC REASONING: Sử dụng kiến trúc Client-side Rendering (CSR) kết hợp với LocalStorage 
+      để quản lý dữ liệu người dùng mà không cần backend phức tạp trong giai đoạn prototype.
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DDMN - Đăng ký</title>
+    <style>
+        /* 
+           MODULE: UI Styling
+           STRATEGY: Sử dụng bảng màu Gradient và Border-radius lớn (18px) để tạo cảm giác 
+           thân thiện và hiện đại cho người dùng IT (Information Technology).
+        */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #fbf6ff 0%, #f4f8ff 100%);
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 18px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand h1 {
+            font-size: 26px;
+            color: #ff6b35;
+            margin-bottom: 8px;
+        }
+
+        .brand p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            background: linear-gradient(135deg, #ff8855, #ff6b35);
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 107, 53, 0.25);
+        }
+
+        .meta {
+            margin-top: 16px;
+            font-size: 14px;
+            text-align: center;
+            color: #555;
+        }
+
+        .meta a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .notice {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #f0c0c0;
+            background: #fff3f3;
+            color: #9c1c1c;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <h1>Đăng ký</h1>
+            <p>Tạo tài khoản để sử dụng ITRO</p>
+        </div>
+
+        <div class="notice" id="notice"></div>
+
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input id="username" type="text" placeholder="Nhập tên đăng nhập" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="Nhập email" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input id="password" type="password" placeholder="Nhập mật khẩu" />
+        </div>
+
+        <div class="form-group">
+            <label for="password-confirm">Xác nhận mật khẩu</label>
+            <input id="password-confirm" type="password" placeholder="Nhập lại mật khẩu" />
+        </div>
+
+        <button class="btn" onclick="register()">Đăng ký</button>
+
+        <div class="meta">
+            Đã có tài khoản? <a href="dangnhap.html">Đăng nhập</a> · <a href="trangchinh.html">Trang chính</a> · <a href="hopdong.html">Hợp đồng</a>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * MODULE: Data Persistence & Session Management
+         * INTENT: Định nghĩa các khóa lưu trữ để đồng bộ dữ liệu giữa các trang trong hệ thống ITRO.
+         */
+        const accountsKey = 'itro_accounts';
+        const sessionKey = 'itro_currentUser';
+        /**
+         * FUNCTION: getSavedAccounts
+         * WHY: Đọc dữ liệu từ bộ nhớ trình duyệt. Sử dụng Try-Catch để xử lý ngoại lệ 
+         * nếu dữ liệu LocalStorage bị lỗi định dạng (Data Corruption).
+         */
+        function getSavedAccounts() {
+            try {
+                const raw = localStorage.getItem(accountsKey);
+                return raw ? JSON.parse(raw) : [];
+            } catch {
+                return [];
+            }
+        }
+        /**
+         * FUNCTION: setSession
+         * INTENT: Ghi nhận trạng thái đăng nhập của người dùng vào phiên (Session).
+         */
+        function setSession(username) {
+            localStorage.setItem(sessionKey, JSON.stringify({ username }));
+        }
+        /**
+         * FUNCTION: showNotice
+         * WHY: Cung cấp phản hồi thị giác ngay lập tức cho người dùng khi có lỗi xảy ra.
+         * STRATEGY: Sử dụng setTimeout (3.5s) để tự động dọn dẹp UI, tránh làm nhiễu giao diện.
+         */
+        function showNotice(message) {
+            const notice = document.getElementById('notice');
+            notice.innerText = message;
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3500);
+        }
+
+        function saveAccounts(accounts) {
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+        }
+        /**
+         * FUNCTION: register
+         * STRATEGIC REASONING: 
+         * 1. Data Cleaning: Sử dụng .trim() để loại bỏ khoảng trắng dư thừa ở Input.
+         * 2. Validation Logic: Kiểm tra tính toàn vẹn và trùng lặp trước khi ghi file (Write operation).
+         * 3. Default Values: Gán mặc định role và status để sẵn sàng cho tính năng phân quyền sau này.
+         */
+        function register() {
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password-confirm').value;
+        // Kiểm tra tính đầy đủ của thông tin đầu vào
+            if (!username || !email || !password || !passwordConfirm) {
+                showNotice('Vui lòng điền đầy đủ thông tin.');
+                return;
+            }
+        // Đảm bảo tính nhất quán của mật khẩu (Data Integrity)
+            if (password !== passwordConfirm) {
+                showNotice('Mật khẩu không khớp.');
+                return;
+            }
+        
+            const accounts = getSavedAccounts();
+
+        // Logic phức tạp: Duyệt mảng để kiểm tra duy nhất (Uniqueness Constraint).
+            const exists = accounts.some((a) => a.username === username);
+            if (exists) {
+                showNotice('Tên đăng nhập đã tồn tại.');
+                return;
+            }
+
+        // Đóng gói dữ liệu người dùng mới
+            accounts.push({
+                username,
+                email,
+                password,
+                role: 'user',
+                status: 'active',
+            });
+
+            saveAccounts(accounts);
+            setSession(username);
+            // Điều hướng sang trang chính để cải thiện luồng người dùng (User Flow).
+            window.location.href = 'trangchinh.html';
+        }
+
+        /**
+         * FUNCTION: checkLoggedIn
+         * INTENT: Tự động chuyển hướng nếu người dùng đã có phiên đăng nhập hợp lệ.
+         * WHY: Để ngăn chặn người dùng đã đăng nhập quay lại trang đăng ký (Guest-only access).
+         */
+        function checkLoggedIn() {
+            try {
+                const current = JSON.parse(localStorage.getItem(sessionKey) || 'null');
+                if (current && current.username) {
+                    window.location.href = 'trangchinh.html';
+                }
+            } catch {
+                // Ignore: Xử lý khi dữ liệu session không hợp lệ, giữ người dùng tại trang hiện tại.
+            }
+        }
+
+        // Đăng ký sự kiện khởi tạo để kiểm tra trạng thái ngay khi trang vừa tải xong.
+        window.addEventListener('DOMContentLoaded', checkLoggedIn);
+    </script>
+</body>
+</html>

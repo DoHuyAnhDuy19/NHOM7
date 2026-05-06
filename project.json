@@ -1,0 +1,43 @@
+{
+  "project": "ITRO - Hệ Thống Quản Lý Cho Thuê Nhà/Phòng",
+  "version": "1.0.0",
+  "description": "Ứng dụng web quản lý cho thuê nhà và phòng",
+  "author": "Nhóm 7",
+  "backend": {
+    "framework": "Spring Boot 3.1.5",
+    "language": "Java 17",
+    "database": "MySQL 8.0",
+    "port": 8080,
+    "contextPath": "/api"
+  },
+  "frontend": {
+    "technologies": ["HTML5", "CSS3", "JavaScript ES6+"],
+    "apiBaseUrl": "http://localhost:8080/api"
+  },
+  "features": [
+    "Quản lý người dùng (Đăng ký, Đăng nhập)",
+    "Quản lý phòng (CRUD)",
+    "Quản lý khách thuê",
+    "Quản lý hợp đồng",
+    "Quản lý hóa đơn",
+    "Quản lý dịch vụ",
+    "Xác thực JWT",
+    "Phân quyền người dùng"
+  ],
+  "modules": {
+    "auth": "Authentication & Authorization",
+    "room": "Room Management",
+    "tenant": "Tenant Management",
+    "contract": "Contract Management",
+    "invoice": "Invoice Management",
+    "service": "Service Management"
+  },
+  "database_entities": [
+    "User",
+    "Room",
+    "Tenant",
+    "Contract",
+    "Invoice",
+    "Service"
+  ]
+}

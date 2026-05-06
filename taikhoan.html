@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITRO - Quản lý tài khoản</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 1;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 60px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 200, 100, 0.2) 0%, rgba(255, 100, 50, 0.1) 100%);
+            clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .services-section {
+            padding: 80px 60px;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .btn-white {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #eee;
+            margin-bottom: 40px;
+        }
+
+        .form-box label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-box input,
+        .form-box select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-top: 6px;
+        }
+
+        .account-list {
+            border: 1px solid #eee;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .account-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid #f4f4f4;
+        }
+
+        .account-row:last-child {
+            border-bottom: none;
+        }
+
+        .account-actions button {
+            margin-left: 10px;
+        }
+
+        .notice {
+            text-align: center;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            background: #fafafa;
+            display: none;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 30px;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                margin-left: 0;
+                gap: 20px;
+                flex-basis: 100%;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+
+            .page-header {
+                padding: 40px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .services-section {
+                padding: 50px 30px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+
+            .account-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .account-actions {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">2Duy</div>
+        <nav>
+            <a href="trangchinh.html">Trang chính</a>
+            <a href="dichvu.html">Dịch vụ</a>
+            <a href="phong.html">Phòng</a>
+            <a href="khachthue.html">Khách Thuê</a>
+            <a href="hopdong.html">Hợp đồng</a>
+            <a href="hoadon.html">Hóa đơn</a>
+            <a href="taikhoan.html">Tài khoản</a>
+        </nav>
+        <div class="auth-buttons" id="auth-links">
+            <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1>Quản lý tài khoản</h1>
+            <p>Quản trị quyền hạn, trạng thái và đổi mật khẩu cho người dùng.</p>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="section-title">
+            <h2>Danh sách tài khoản</h2>
+            <p>Thêm, chỉnh sửa, khóa/mở khoá và thiết lập quyền hạn dễ dàng.</p>
+        </div>
+
+        <div class="notice" id="account-notice"></div>
+
+        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center;">
+            <div style="flex:1; min-width:320px; max-width:520px;">
+                <div class="form-box">
+                    <h3 style="margin-top:0;">Thông tin tài khoản</h3>
+                    <label>
+                        Tên đăng nhập
+                        <input id="account-username" placeholder="admin" />
+                    </label>
+                    <label>
+                        Email
+                        <input id="account-email" placeholder="example@domain.com" />
+                    </label>
+                    <label>
+                        Quyền hạn
+                        <select id="account-role">
+                            <option value="admin">Quản lý</option>
+                            <option value="user">Khách thuê</option>
+                        </select>
+                    </label>
+                    <label>
+                        Trạng thái
+                        <select id="account-status">
+                            <option value="active">Đang hoạt động</option>
+                            <option value="locked">Đã khoá</option>
+                        </select>
+                    </label>
+
+                    <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px;">
+                        <button class="btn-white" onclick="resetAccountForm()" type="button" style="background:#eee; color:#333;">Hủy</button>
+                        <button class="btn-white" onclick="saveAccount()" type="button">Lưu</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex:1; min-width:320px; max-width:700px;">
+                <div class="account-list" id="account-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 ITRO - Giải Pháp Quản Lý Nhà Cho Thuê</p>
+        <p>Thiết kế để giúp bạn quản lý kinh doanh một cách chuyên nghiệp</p>
+    </footer>
+
+    <script>
+        // ------------ Auth helpers ------------
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('itro_currentUser') || 'null');
+        }
+
+        function requireLogin() {
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'dangnhap.html';
+                return;
+            }
+
+            const accounts = getSaved(accountsKey) || [];
+            const me = accounts.find((a) => a.username === user.username);
+            if (!me || me.role !== 'admin') {
+                alert('Bạn không có quyền truy cập trang này.');
+                window.location.href = 'trangchinh.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('itro_currentUser');
+            window.location.href = 'dangnhap.html';
+        }
+
+        function renderHeader() {
+            const authLinks = document.getElementById('auth-links');
+            const currentUser = getCurrentUser();
+
+            if (!authLinks) return;
+
+            if (currentUser) {
+                authLinks.innerHTML = `
+                    <span>Xin chào, <strong>${currentUser.username}</strong></span>
+                    <a href="#" class="logout-btn" onclick="logout()">Đăng xuất</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+                    <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+                `;
+            }
+        }
+
+        const accountsKey = 'itro_accounts';
+
+        let accounts = [];
+        let editingAccountId = null;
+
+        function getSaved(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function save(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function showNotice(message, isError = false) {
+            const notice = document.getElementById('account-notice');
+            notice.style.display = 'block';
+            notice.style.borderColor = isError ? '#f5a0a0' : '#bde5b8';
+            notice.style.background = isError ? '#fff1f1' : '#f5fff5';
+            notice.textContent = message;
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3200);
+        }
+
+        function formatRole(role) {
+            return role === 'admin' ? 'Quản lý' : 'Khách thuê';
+        }
+
+        function formatStatus(status) {
+            return status === 'active' ? 'Đang hoạt động' : 'Đã khoá';
+        }
+
+        function renderAccountList() {
+            const container = document.getElementById('account-list');
+
+            if (!accounts.length) {
+                container.innerHTML = `
+                    <div style="padding:20px; text-align:center; color:#666;">Chưa có tài khoản nào. Hãy thêm tài khoản mới.</div>
+                `;
+                return;
+            }
+
+            const rows = accounts
+                .map((acc) => {
+                    return `
+                        <div class="account-row">
+                            <div>
+                                <div style="font-weight:600;">${acc.username}</div>
+                                <div style="font-size:13px; color:#555;">${acc.email} · ${formatRole(acc.role)} · ${formatStatus(acc.status)}</div>
+                            </div>
+                            <div class="account-actions">
+                                <button onclick="editAccount('${acc.username}')">Sửa</button>
+                                <button onclick="toggleLock('${acc.username}')">${acc.status === 'active' ? 'Khoá' : 'Mở khoá'}</button>
+                                <button onclick="resetPassword('${acc.username}')">Đặt lại MK</button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            container.innerHTML = rows;
+        }
+
+        function resetAccountForm() {
+            editingAccountId = null;
+            document.getElementById('account-username').value = '';
+            document.getElementById('account-email').value = '';
+            document.getElementById('account-role').value = 'user';
+            document.getElementById('account-status').value = 'active';
+        }
+
+        function saveAccount() {
+            const username = document.getElementById('account-username').value.trim();
+            const email = document.getElementById('account-email').value.trim();
+            const role = document.getElementById('account-role').value;
+            const status = document.getElementById('account-status').value;
+
+            if (!username || !email) {
+                showNotice('Vui lòng điền đầy đủ thông tin.', true);
+                return;
+            }
+
+            const duplicate = accounts.find((a) => a.username === username);
+            if (!editingAccountId && duplicate) {
+                showNotice('Tên đăng nhập đã tồn tại.', true);
+                return;
+            }
+
+            if (editingAccountId) {
+                const idx = accounts.findIndex((a) => a.username === editingAccountId);
+                if (idx === -1) {
+                    showNotice('Không tìm thấy tài khoản.', true);
+                    return;
+                }
+
+                accounts[idx] = { ...accounts[idx], email, role, status };
+                showNotice('Cập nhật tài khoản thành công.');
+            } else {
+                accounts.push({ username, email, role, status, password: '123456' });
+                showNotice('Thêm tài khoản mới thành công (mật khẩu mặc định 123456).');
+            }
+
+            save(accountsKey, accounts);
+            renderAccountList();
+            resetAccountForm();
+        }
+
+        function editAccount(username) {
+            const acc = accounts.find((a) => a.username === username);
+            if (!acc) {
+                showNotice('Không tìm thấy tài khoản.', true);
+                return;
+            }
+
+            editingAccountId = username;
+            document.getElementById('account-username').value = acc.username;
+            document.getElementById('account-email').value = acc.email;
+            document.getElementById('account-role').value = acc.role;
+            document.getElementById('account-status').value = acc.status;
+        }
+
+        function toggleLock(username) {
+            const idx = accounts.findIndex((a) => a.username === username);
+            if (idx === -1) return;
+            accounts[idx].status = accounts[idx].status === 'active' ? 'locked' : 'active';
+            save(accountsKey, accounts);
+            renderAccountList();
+            showNotice(`Tài khoản ${username} đã được ${accounts[idx].status === 'active' ? 'mở khóa' : 'khóa'}.`);
+        }
+
+        function resetPassword(username) {
+            const idx = accounts.findIndex((a) => a.username === username);
+            if (idx === -1) return;
+            accounts[idx].password = '123456';
+            save(accountsKey, accounts);
+            showNotice(`Đã đặt lại mật khẩu cho ${username} (mặc định: 123456).`);
+        }
+
+        function init() {
+            const saved = getSaved(accountsKey);
+            if (Array.isArray(saved) && saved.length) {
+                accounts = saved;
+            } else {
+                accounts = [
+                    { username: 'admin', email: 'admin@itro.com', role: 'admin', status: 'active', password: '123456' },
+                    { username: 'user1', email: 'user1@itro.com', role: 'user', status: 'active', password: '123456' },
+                ];
+                save(accountsKey, accounts);
+            }
+
+            renderAccountList();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            requireLogin();
+            renderHeader();
+            init();
+        });
+    </script>
+</body>
+</html>

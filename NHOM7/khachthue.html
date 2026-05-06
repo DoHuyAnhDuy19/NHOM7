@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITRO - Khách thuê</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 1;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 60px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 200, 100, 0.2) 0%, rgba(255, 100, 50, 0.1) 100%);
+            clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 60px;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 40px 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #ff9966);
+            border-radius: 12px 12px 0 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff8855, #ff6b35);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-card a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: gap 0.3s;
+        }
+
+        .service-card a:hover {
+            gap: 5px;
+        }
+
+        .service-card a::after {
+            content: '→';
+            margin-left: 5px;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            padding: 80px 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .feature-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #ff8855 0%, #ff6b35 100%);
+            padding: 80px 60px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-white {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 30px;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                margin-left: 0;
+                gap: 20px;
+                flex-basis: 100%;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+
+            .page-header {
+                padding: 40px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .services-section,
+            .features-section,
+            .cta-section {
+                padding: 50px 30px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .cta-section h2 {
+                font-size: 28px;
+            }
+
+            footer {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">DDMN </div>
+        <nav>
+            <a href="trangchinh.html">Trang chính</a>
+            <a href="dichvu.html">Dịch vụ</a>
+            <a href="phong.html">Phòng</a>
+            <a href="khachthue.html">Khách Thuê</a>
+            <a href="hopdong.html">Hợp đồng</a>
+            <a href="hoadon.html">Hóa đơn</a>
+            <a href="taikhoan.html">Tài khoản</a>
+        </nav>
+        <div class="auth-buttons" id="auth-links">
+            <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1>Quản Lý Khách Thuê</h1>
+            <p>Lưu trữ thông tin chi tiết và theo dõi hợp đồng của mọi khách thuê</p>
+        </div>
+    </section>
+
+    <!-- Tenant Management -->
+    <section class="services-section" id="khachthue">
+        <div class="section-title">
+            <h2>Quản lý khách thuê</h2>
+            <p>Thêm, sửa, xóa khách thuê và quản lý trạng thái phòng.</p>
+        </div>
+
+        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin-bottom:40px;">
+            <div style="flex:1; min-width:320px; max-width:520px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="margin:0;">Thông tin khách thuê</h3>
+                    <button class="btn-white" onclick="showAddForm()">Thêm khách mới</button>
+                </div>
+
+                <div id="tenant-form" style="display:none; background:#f9f9f9; padding:20px; border-radius:14px; border:1px solid #eee;">
+                    <h4 id="tenant-form-title" style="margin-top:0;">Thêm khách thuê</h4>
+                    <div style="display:grid; gap:12px;">
+                        <label>
+                            <span style="font-weight:600;">Mã khách</span>
+                            <input id="tenant-id" type="text" placeholder="VD: KT001" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Họ và tên</span>
+                            <input id="tenant-name" type="text" placeholder="Nguyễn Văn A" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Số điện thoại</span>
+                            <input id="tenant-phone" type="text" placeholder="0909xxxxxx" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">CCCD/CMND</span>
+                            <input id="tenant-idcard" type="text" placeholder="012345678" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Chọn phòng</span>
+                            <select id="tenant-room" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></select>
+                        </label>
+                        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:10px;">
+                            <button class="btn-white" onclick="hideForm()" type="button" style="background:#eee; color:#333;">Hủy</button>
+                            <button class="btn-white" onclick="saveTenant()" type="button">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tenant-notice" style="margin-top:16px; display:none; padding:14px; border:1px solid #ddd; border-radius:12px; background:#fefefe; color:#333;"></div>
+            </div>
+
+            <div style="flex:1; min-width:320px; max-width:700px;">
+                <h3 style="margin-top:0;">Danh sách khách thuê</h3>
+                <div id="tenant-list" style="border:1px solid #eee; border-radius:14px; overflow:hidden;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="section-title">
+            <h2>Quản lý khách thuê hiệu quả</h2>
+            <p>Khám phá tính năng bổ trợ giúp bạn kiểm soát tốt hơn mọi hợp đồng và phòng trọ.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-number">+1</div>
+                <h4>Tự động cập nhật</h4>
+                <p>Trạng thái phòng thay đổi khi thêm/xóa khách thuê.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">100%</div>
+                <h4>Dữ liệu an toàn</h4>
+                <p>Toàn bộ dữ liệu lưu trên trình duyệt, không lo mất dữ liệu.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">0</div>
+                <h4>Không cần backend</h4>
+                <p>Hoạt động offline, chỉ cần mở file HTML là dùng được.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">💡</div>
+                <h4>Dễ tùy chỉnh</h4>
+                <p>Dễ mở rộng cho các trường dữ liệu hoặc điều kiện thuê.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Bắt đầu quản lý khách thuê ngay</h2>
+            <p>Thêm khách, chuyển phòng, quản lý hợp đồng chỉ trong vài giây.</p>
+            <button class="btn-white">Dùng Miễn Phí</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 ITRO - Giải Pháp Quản Lý Nhà Cho Thuê</p>
+        <p>Thiết kế để giúp bạn quản lý kinh doanh một cách chuyên nghiệp</p>
+    </footer>
+
+    <script>
+        const tenantsKey = 'itro_tenants';
+        const roomsKey = 'itro_rooms';
+
+        let tenants = [];
+        let rooms = [];
+        let editingTenantId = null;
+
+        function getSaved(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function save(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function showNotice(message, isError = false) {
+            const notice = document.getElementById('tenant-notice');
+            notice.style.display = 'block';
+            notice.style.borderColor = isError ? '#f5a0a0' : '#bde5b8';
+            notice.style.background = isError ? '#fff1f1' : '#f5fff5';
+            notice.textContent = message;
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3500);
+        }
+
+        function initRooms() {
+            const savedRooms = getSaved(roomsKey);
+            if (Array.isArray(savedRooms) && savedRooms.length) {
+                rooms = savedRooms;
+            } else {
+                rooms = [
+                    { id: 'P001', type: 'Đơn', status: 'Trống' },
+                    { id: 'P002', type: 'Đơn', status: 'Trống' },
+                    { id: 'P003', type: 'Đơn', status: 'Trống' },
+                ];
+                save(roomsKey, rooms);
+            }
+        }
+
+        function initTenants() {
+            const savedTenants = getSaved(tenantsKey);
+            if (Array.isArray(savedTenants)) {
+                tenants = savedTenants;
+            } else {
+                tenants = [];
+                save(tenantsKey, tenants);
+            }
+        }
+
+        function renderRoomOptions() {
+            const select = document.getElementById('tenant-room');
+            select.innerHTML = '';
+
+            const emptyRooms = rooms.filter((r) => r.status === 'Trống');
+            if (!emptyRooms.length) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Không còn phòng trống';
+                select.appendChild(option);
+                return;
+            }
+
+            emptyRooms.forEach((room) => {
+                const option = document.createElement('option');
+                option.value = room.id;
+                option.textContent = `${room.id} (${room.type})`;
+                select.appendChild(option);
+            });
+        }
+
+        function renderTenantList() {
+            const container = document.getElementById('tenant-list');
+
+            if (!tenants.length) {
+                container.innerHTML = `
+                    <div style="padding:20px; text-align:center; color:#666;">Chưa có khách thuê nào. Hãy thêm khách mới.</div>
+                `;
+                return;
+            }
+
+            const rows = tenants.map((tenant) => {
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid #f0f0f0;">
+                        <div style="flex:1;">
+                            <div style="font-weight:600;">${tenant.name} (${tenant.id})</div>
+                            <div style="font-size:13px; color:#555;">Phòng: ${tenant.room} • SĐT: ${tenant.phone} • CCCD: ${tenant.idCard}</div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="viewTenant('${tenant.id}')">Xem</button>
+                            <button onclick="editTenant('${tenant.id}')">Sửa</button>
+                            <button onclick="deleteTenant('${tenant.id}')" style="color:#c00;">Xóa</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = rows.join('');
+        }
+
+        function resetForm() {
+            editingTenantId = null;
+            document.getElementById('tenant-form-title').innerText = 'Thêm khách thuê';
+            document.getElementById('tenant-id').value = '';
+            document.getElementById('tenant-name').value = '';
+            document.getElementById('tenant-phone').value = '';
+            document.getElementById('tenant-idcard').value = '';
+            renderRoomOptions();
+        }
+
+        function showAddForm() {
+            resetForm();
+            document.getElementById('tenant-form').style.display = 'block';
+        }
+
+        function hideForm() {
+            document.getElementById('tenant-form').style.display = 'none';
+        }
+
+        function updateRoomStatus(roomId, status) {
+            const roomIndex = rooms.findIndex((r) => r.id === roomId);
+            if (roomIndex === -1) return;
+            rooms[roomIndex].status = status;
+            save(roomsKey, rooms);
+        }
+
+        function saveTenant() {
+            const id = document.getElementById('tenant-id').value.trim();
+            const name = document.getElementById('tenant-name').value.trim();
+            const phone = document.getElementById('tenant-phone').value.trim();
+            const idCard = document.getElementById('tenant-idcard').value.trim();
+            const room = document.getElementById('tenant-room').value;
+
+            if (!id || !name || !phone || !idCard || !room) {
+                showNotice('Vui lòng điền đầy đủ thông tin và chọn phòng.', true);
+                return;
+            }
+
+            const existed = tenants.find((t) => t.id === id);
+            if (editingTenantId && editingTenantId !== id && existed) {
+                showNotice('Mã khách đã tồn tại.', true);
+                return;
+            }
+
+            if (!editingTenantId && existed) {
+                showNotice('Mã khách đã tồn tại.', true);
+                return;
+            }
+
+            if (editingTenantId) {
+                const tenantIndex = tenants.findIndex((t) => t.id === editingTenantId);
+                if (tenantIndex === -1) {
+                    showNotice('Không tìm thấy khách thuê cần sửa.', true);
+                    return;
+                }
+
+                const oldRoom = tenants[tenantIndex].room;
+                if (oldRoom !== room) {
+                    updateRoomStatus(oldRoom, 'Trống');
+                    updateRoomStatus(room, 'Đã thuê');
+                }
+
+                tenants[tenantIndex] = { id, name, phone, idCard, room };
+                showNotice('Cập nhật khách thuê thành công.');
+            } else {
+                tenants.push({ id, name, phone, idCard, room });
+                updateRoomStatus(room, 'Đã thuê');
+                showNotice('Thêm khách thuê mới thành công.');
+            }
+
+            save(tenantsKey, tenants);
+            save(roomsKey, rooms);
+            renderTenantList();
+            resetForm();
+            hideForm();
+        }
+
+        function viewTenant(id) {
+            const tenant = tenants.find((t) => t.id === id);
+            if (!tenant) {
+                showNotice('Không tìm thấy khách thuê.', true);
+                return;
+            }
+
+            alert(`Mã: ${tenant.id}\nTên: ${tenant.name}\nSĐT: ${tenant.phone}\nCCCD: ${tenant.idCard}\nPhòng: ${tenant.room}`);
+        }
+
+        function editTenant(id) {
+            const tenant = tenants.find((t) => t.id === id);
+            if (!tenant) {
+                showNotice('Không tìm thấy khách thuê.', true);
+                return;
+            }
+
+            editingTenantId = id;
+            document.getElementById('tenant-form-title').innerText = `Sửa khách: ${id}`;
+            document.getElementById('tenant-id').value = tenant.id;
+            document.getElementById('tenant-name').value = tenant.name;
+            document.getElementById('tenant-phone').value = tenant.phone;
+            document.getElementById('tenant-idcard').value = tenant.idCard;
+
+            renderRoomOptions();
+            const roomSelect = document.getElementById('tenant-room');
+            const optionExists = Array.from(roomSelect.options).some((o) => o.value === tenant.room);
+            if (!optionExists) {
+                const option = document.createElement('option');
+                option.value = tenant.room;
+                option.textContent = tenant.room + ' (Đang thuê)';
+                roomSelect.prepend(option);
+            }
+            roomSelect.value = tenant.room;
+
+            document.getElementById('tenant-form').style.display = 'block';
+        }
+
+        function deleteTenant(id) {
+            if (!confirm('Bạn có chắc muốn xóa khách thuê này?')) return;
+            const tenantIndex = tenants.findIndex((t) => t.id === id);
+            if (tenantIndex === -1) {
+                showNotice('Không tìm thấy khách thuê.', true);
+                return;
+            }
+
+            const room = tenants[tenantIndex].room;
+            tenants.splice(tenantIndex, 1);
+            updateRoomStatus(room, 'Trống');
+            save(tenantsKey, tenants);
+            save(roomsKey, rooms);
+            renderTenantList();
+            showNotice('Đã xóa khách thuê và cập nhật trạng thái phòng.');
+        }
+
+        function init() {
+            initRooms();
+            initTenants();
+            renderRoomOptions();
+            renderTenantList();
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(localStorage.getItem('itro_currentUser') || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function requireLogin() {
+            const current = getCurrentUser();
+            if (!current || !current.username) {
+                window.location.href = 'dangnhap.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('itro_currentUser');
+            window.location.href = 'dangnhap.html';
+        }
+
+        function renderHeader() {
+            const authLinks = document.getElementById('auth-links');
+            const user = getCurrentUser();
+            if (!authLinks) return;
+            if (user && user.username) {
+                authLinks.innerHTML = `
+                    <span style="font-weight:600; color:#333; margin-right:12px;">Xin chào, ${user.username}</span>
+                    <a href="#" onclick="logout()" class="login-btn" style="border-color:#ff6b35;">Đăng xuất</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+                    <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+                `;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            requireLogin();
+            renderHeader();
+            init();
+        });
+    </script>
+</body>
+</html>

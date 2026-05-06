@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DDMN  - Đăng nhập</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #faf2ff 0%, #f0f7ff 100%);
+            color: #333;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 18px;
+            padding: 42px 38px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .brand h1 {
+            font-size: 26px;
+            color: #ff6b35;
+            margin-bottom: 8px;
+        }
+
+        .brand p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            background: linear-gradient(135deg, #ff8855, #ff6b35);
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 107, 53, 0.25);
+        }
+
+        .meta {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .meta a {
+            color: #ff6b35;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .notice {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #f0c0c0;
+            background: #fff3f3;
+            color: #9c1c1c;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <h1>ITRO</h1>
+            <p>Đăng nhập để bắt đầu quản lý</p>
+        </div>
+
+        <div class="notice" id="notice"></div>
+
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input id="username" type="text" placeholder="VD: admin" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input id="password" type="password" placeholder="Nhập mật khẩu" />
+        </div>
+
+        <button class="btn" onclick="login()">Đăng nhập</button>
+
+        <div class="meta">
+            Chưa có tài khoản? <a href="dangky.html">Đăng ký</a> · <a href="trangchinh.html">Trang chính</a> · <a href="hopdong.html">Hợp đồng</a>
+        </div>
+    </div>
+
+    <script>
+        const accountsKey = 'itro_accounts';
+        const sessionKey = 'itro_currentUser';
+
+        function getSavedAccounts() {
+            try {
+                const raw = localStorage.getItem(accountsKey);
+                return raw ? JSON.parse(raw) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function setSession(username) {
+            localStorage.setItem(sessionKey, JSON.stringify({ username }));
+        }
+
+        function showNotice(message) {
+            const notice = document.getElementById('notice');
+            notice.innerText = message;
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3500);
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showNotice('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.');
+                return;
+            }
+
+            const accounts = getSavedAccounts();
+            const account = accounts.find((a) => a.username === username);
+
+            if (!account) {
+                showNotice('Tài khoản không tồn tại.');
+                return;
+            }
+
+            if (account.status === 'locked') {
+                showNotice('Tài khoản đang bị khoá, vui lòng liên hệ quản lý.');
+                return;
+            }
+
+            if (account.password !== password) {
+                showNotice('Mật khẩu không chính xác.');
+                return;
+            }
+
+            setSession(username);
+            window.location.href = 'trangchinh.html';
+        }
+
+        function checkLoggedIn() {
+            try {
+                const current = JSON.parse(localStorage.getItem(sessionKey) || 'null');
+                if (current && current.username) {
+                    window.location.href = 'trangchinh.html';
+                }
+            } catch {
+                // Ignore invalid session data
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkLoggedIn);
+    </script>
+</body>
+</html>

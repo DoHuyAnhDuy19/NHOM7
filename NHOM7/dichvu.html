@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDMN  - Dịch vụ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 1;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 60px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 200, 100, 0.2) 0%, rgba(255, 100, 50, 0.1) 100%);
+            clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 60px;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 40px 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #ff9966);
+            border-radius: 12px 12px 0 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff8855, #ff6b35);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-card a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: gap 0.3s;
+        }
+
+        .service-card a:hover {
+            gap: 5px;
+        }
+
+        .service-card a::after {
+            content: '→';
+            margin-left: 5px;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            padding: 80px 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .feature-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #ff8855 0%, #ff6b35 100%);
+            padding: 80px 60px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-white {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 30px;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                margin-left: 0;
+                gap: 20px;
+                flex-basis: 100%;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+
+            .page-header {
+                padding: 40px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .services-section,
+            .features-section,
+            .cta-section {
+                padding: 50px 30px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .cta-section h2 {
+                font-size: 28px;
+            }
+
+            footer {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">DDMN </div>
+        <nav>
+            <a href="trangchinh.html">Trang chính</a>
+            <a href="dichvu.html">Dịch vụ</a>
+            <a href="phong.html">Phòng</a>
+            <a href="khachthue.html">Khách Thuê</a>
+            <a href="hopdong.html">Hợp đồng</a>
+            <a href="hoadon.html">Hóa đơn</a>
+            <a href="taikhoan.html">Tài khoản</a>
+        </nav>
+        <div class="auth-buttons" id="auth-links">
+            <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1>Dịch Vụ ITRO</h1>
+            <p>Giải pháp quản lý nhà trọ toàn diện và chuyên nghiệp</p>
+        </div>
+    </section>
+
+    <!-- Service Management -->
+    <section class="services-section" id="dichvu">
+        <div class="section-title">
+            <h2>Quản lý dịch vụ</h2>
+            <p>Thêm, sửa, xoá dịch vụ và điều chỉnh đơn giá theo nhu cầu.</p>
+        </div>
+
+        <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin-bottom:40px;">
+            <div style="flex:1; min-width:320px; max-width:520px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="margin:0;">Thông tin dịch vụ</h3>
+                    <button class="btn-white" onclick="showServiceForm()">Thêm dịch vụ</button>
+                </div>
+
+                <div id="service-form" style="display:none; background:#f9f9f9; padding:20px; border-radius:14px; border:1px solid #eee;">
+                    <h4 id="service-form-title" style="margin-top:0;">Thêm dịch vụ</h4>
+                    <div style="display:grid; gap:12px;">
+                        <label>
+                            <span style="font-weight:600;">Mã dịch vụ</span>
+                            <input id="service-id" type="text" placeholder="VD: DV001" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Tên dịch vụ</span>
+                            <input id="service-name" type="text" placeholder="WiFi, Giặt ủi" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <label>
+                            <span style="font-weight:600;">Đơn giá (VNĐ)</span>
+                            <input id="service-price" type="number" min="0" placeholder="250000" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" />
+                        </label>
+                        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:10px;">
+                            <button class="btn-white" onclick="hideServiceForm()" type="button" style="background:#eee; color:#333;">Hủy</button>
+                            <button class="btn-white" onclick="saveService()" type="button">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="service-notice" style="margin-top:16px; display:none; padding:14px; border:1px solid #ddd; border-radius:12px; background:#fefefe; color:#333;"></div>
+            </div>
+
+            <div style="flex:1; min-width:320px; max-width:700px;">
+                <h3 style="margin-top:0;">Danh sách dịch vụ</h3>
+                <div id="service-list" style="border:1px solid #eee; border-radius:14px; overflow:hidden;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="section-title">
+            <h2>Tại Sao Chọn ITRO?</h2>
+            <p>Những lợi ích mà ITRO mang lại cho kinh doanh của bạn</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-number">99%</div>
+                <h4>Chính Xác</h4>
+                <p>Tự động hóa giảm sai sót trong quản lý dữ liệu</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">10x</div>
+                <h4>Nhanh Hơn</h4>
+                <p>Tiết kiệm 80% thời gian quản lý hàng ngày</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">24/7</div>
+                <h4>Hỗ Trợ</h4>
+                <p>Nhóm hỗ trợ khách hàng luôn sẵn sàng giúp đỡ</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">500+</div>
+                <h4>Khách Hàng</h4>
+                <p>Được tin tưởng bởi hơn 500 chủ nhà trọ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Sẵn Sàng Bắt Đầu?</h2>
+            <p>Quản lý dịch vụ linh hoạt, cập nhật tức thì, phù hợp với mọi quy mô nhà trọ.</p>
+            <button class="btn-white">Bắt đầu ngay</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 ITRO - Giải Pháp Quản Lý Nhà Cho Thuê</p>
+        <p>Thiết kế để giúp bạn quản lý kinh doanh một cách chuyên nghiệp</p>
+    </footer>
+
+    <script>
+        const servicesKey = 'itro_services';
+
+        let services = [];
+        let editingServiceId = null;
+
+        function getSaved(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function save(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function showNotice(message, isError = false) {
+            const notice = document.getElementById('service-notice');
+            notice.style.display = 'block';
+            notice.style.borderColor = isError ? '#f5a0a0' : '#bde5b8';
+            notice.style.background = isError ? '#fff1f1' : '#f5fff5';
+            notice.textContent = message;
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3200);
+        }
+
+        function renderServiceList() {
+            const container = document.getElementById('service-list');
+            if (!services.length) {
+                container.innerHTML = `
+                    <div style="padding:20px; text-align:center; color:#666;">Chưa có dịch vụ nào. Hãy thêm dịch vụ mới.</div>
+                `;
+                return;
+            }
+
+            const rows = services
+                .map((service) => {
+                    return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid #f0f0f0;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">${service.name} (${service.id})</div>
+                                <div style="font-size:13px; color:#555;">Đơn giá: ${formatCurrency(service.price)} / ${service.unit}</div>
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="editService('${service.id}')">Sửa</button>
+                                <button onclick="deleteService('${service.id}')" style="color:#c00;">Xóa</button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            container.innerHTML = rows;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0,
+            }).format(value);
+        }
+
+        function resetServiceForm() {
+            editingServiceId = null;
+            document.getElementById('service-form-title').innerText = 'Thêm dịch vụ';
+            document.getElementById('service-id').value = '';
+            document.getElementById('service-name').value = '';
+            document.getElementById('service-price').value = '';
+        }
+
+        function showServiceForm() {
+            resetServiceForm();
+            document.getElementById('service-form').style.display = 'block';
+        }
+
+        function hideServiceForm() {
+            document.getElementById('service-form').style.display = 'none';
+        }
+
+        function saveService() {
+            const id = document.getElementById('service-id').value.trim();
+            const name = document.getElementById('service-name').value.trim();
+            const price = Number(document.getElementById('service-price').value);
+
+            if (!id || !name || isNaN(price) || price < 0) {
+                showNotice('Vui lòng điền đầy đủ thông tin hợp lệ.', true);
+                return;
+            }
+
+            const existing = services.find((s) => s.id === id);
+            if (editingServiceId) {
+                const index = services.findIndex((s) => s.id === editingServiceId);
+                if (index !== -1) {
+                    services[index] = { id, name, price, unit: 'lần' };
+                    showNotice('Cập nhật dịch vụ thành công.');
+                }
+            } else {
+                if (existing) {
+                    showNotice('Mã dịch vụ đã tồn tại.', true);
+                    return;
+                }
+                services.push({ id, name, price, unit: 'lần' });
+                showNotice('Thêm dịch vụ mới thành công.');
+            }
+
+            save(servicesKey, services);
+            renderServiceList();
+            resetServiceForm();
+            hideServiceForm();
+        }
+
+        function editService(id) {
+            const service = services.find((s) => s.id === id);
+            if (!service) {
+                showNotice('Không tìm thấy dịch vụ.', true);
+                return;
+            }
+
+            editingServiceId = id;
+            document.getElementById('service-form-title').innerText = `Sửa dịch vụ ${id}`;
+            document.getElementById('service-id').value = service.id;
+            document.getElementById('service-name').value = service.name;
+            document.getElementById('service-price').value = service.price;
+            document.getElementById('service-form').style.display = 'block';
+        }
+
+        function deleteService(id) {
+            if (!confirm('Bạn có chắc muốn xóa dịch vụ này?')) return;
+            services = services.filter((s) => s.id !== id);
+            save(servicesKey, services);
+            renderServiceList();
+            showNotice('Dịch vụ đã được xóa.');
+        }
+
+        function init() {
+            const saved = getSaved(servicesKey);
+            if (Array.isArray(saved) && saved.length) {
+                services = saved;
+            } else {
+                services = [
+                    { id: 'DV001', name: 'WiFi', price: 150000, unit: 'lần' },
+                    { id: 'DV002', name: 'Giặt ủi', price: 50000, unit: 'lần' },
+                ];
+                save(servicesKey, services);
+            }
+
+            renderServiceList();
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(localStorage.getItem('itro_currentUser') || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function requireLogin() {
+            const current = getCurrentUser();
+            if (!current || !current.username) {
+                window.location.href = 'dangnhap.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('itro_currentUser');
+            window.location.href = 'dangnhap.html';
+        }
+
+        function renderHeader() {
+            const authLinks = document.getElementById('auth-links');
+            const user = getCurrentUser();
+            if (!authLinks) return;
+            if (user && user.username) {
+                authLinks.innerHTML = `
+                    <span style="font-weight:600; color:#333; margin-right:12px;">Xin chào, ${user.username}</span>
+                    <a href="#" onclick="logout()" class="login-btn" style="border-color:#ff6b35;">Đăng xuất</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+                    <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+                `;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            requireLogin();
+            renderHeader();
+            init();
+        });
+    </script>
+</body>
+</html>

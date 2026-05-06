@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITRO - Quản lý phòng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 1;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .signup-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 60px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 200, 100, 0.2) 0%, rgba(255, 100, 50, 0.1) 100%);
+            clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 60px;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 40px 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #ff9966);
+            border-radius: 12px 12px 0 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff8855, #ff6b35);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-card a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: gap 0.3s;
+        }
+
+        .service-card a:hover {
+            gap: 5px;
+        }
+
+        .service-card a::after {
+            content: '→';
+            margin-left: 5px;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            padding: 80px 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .feature-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #ff8855 0%, #ff6b35 100%);
+            padding: 80px 60px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-white {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 30px;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                margin-left: 0;
+                gap: 20px;
+                flex-basis: 100%;
+                margin-top: 15px;
+                font-size: 12px;
+            }
+
+            .page-header {
+                padding: 40px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .services-section,
+            .features-section,
+            .cta-section {
+                padding: 50px 30px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .cta-section h2 {
+                font-size: 28px;
+            }
+
+            footer {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">itro</div>
+        <nav>
+            <a href="trangchinh.html">Trang chính</a>
+            <a href="dichvu.html">Dịch vụ</a>
+            <a href="khachthue.html">Khách thuê</a>
+            <a href="hopdong.html">Hợp đồng</a>
+            <a href="phong.html">Phòng</a>
+            <a href="hoadon.html">Hóa đơn</a>
+            <a href="taikhoan.html">Tài khoản</a>
+        </nav>
+        <div class="auth-buttons" id="auth-links">
+            <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1>Quản Lý Phòng</h1>
+            <p>Thêm, sửa, xóa, xem chi tiết và cập nhật trạng thái các phòng trọ</p>
+        </div>
+    </section>
+
+    <!-- Rooms management section -->
+    <section class="services-section" id="phong">
+        <div class="section-title">
+            <h2>Quản lý phòng</h2>
+            <p>Danh sách phòng trọ hiện có và thao tác</p>
+        </div>
+
+        <div class="room-actions" style="text-align:right; margin-bottom:20px;">
+            <button onclick="showAddForm()" class="btn-white">Thêm phòng mới</button>
+        </div>
+
+        <table class="rooms-table" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="border:1px solid #ddd; padding:8px;">Mã phòng</th>
+                    <th style="border:1px solid #ddd; padding:8px;">Loại</th>
+                    <th style="border:1px solid #ddd; padding:8px;">Giá</th>
+                    <th style="border:1px solid #ddd; padding:8px;">Trạng thái</th>
+                    <th style="border:1px solid #ddd; padding:8px;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="room-list">
+            <!-- Rows được tạo động bởi JavaScript -->
+        </tbody>
+        </table>
+
+        <!-- Add/Edit form -->
+        <div id="room-form" style="display:none; margin-top:20px;">
+            <h3 id="form-title">Thêm phòng</h3>
+            <form onsubmit="saveRoom(event)">
+                <label>Mã phòng: <input type="text" id="room-id" required></label><br><br>
+                <label>Loại: <input type="text" id="room-type" required></label><br><br>
+                <label>Giá: <input type="text" id="room-price" required></label><br><br>
+                <label>Trạng thái: 
+                    <select id="room-status">
+                        <option value="Trống">Trống</option>
+                        <option value="Đang thuê">Đang thuê</option>
+                    </select>
+                </label><br><br>
+                <button type="submit" class="btn-white">Lưu</button>
+                <button type="button" onclick="hideForm()" class="btn-white" style="background:#ccc; color:#333;">Hủy</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="section-title">
+            <h2>Lợi ích quản lý phòng</h2>
+            <p>Những gì bạn nhận được khi dùng ITRO để quản lý phòng trọ</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-number">0%</div>
+                <h4>Quản lý dễ dàng</h4>
+                <p>Thêm, sửa, xóa và kiểm soát trạng thái phòng chỉ trong vài cú nhấp.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">100+</div>
+                <h4>Danh sách phòng</h4>
+                <p>Hiển thị đầy đủ thông tin phòng: mã, loại, giá, trạng thái.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">24/7</div>
+                <h4>Trực quan</h4>
+                <p>Giao diện bảng rõ ràng giúp quản lý nhanh chóng.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-number">10s</div>
+                <h4>Hiệu quả</h4>
+                <p>Cập nhật trạng thái phòng và thông tin ngay lập tức.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Bắt đầu quản lý phòng ngay</h2>
+            <p>Thêm phòng mới hoặc cập nhật thông tin chỉ trong vài giây.</p>
+            <button class="btn-white">Dùng Miễn Phí</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 ITRO - Giải Pháp Quản Lý Nhà Cho Thuê</p>
+        <p>Thiết kế để giúp bạn quản lý kinh doanh một cách chuyên nghiệp</p>
+    </footer>
+
+    <script>
+        const sessionKey = 'itro_currentUser';
+        const roomsKey = 'itro_rooms';
+        let rooms = [];
+        let editingRoomId = null;
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(localStorage.getItem(sessionKey) || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function requireLogin() {
+            const current = getCurrentUser();
+            if (!current || !current.username) {
+                window.location.href = 'dangnhap.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(sessionKey);
+            window.location.href = 'dangnhap.html';
+        }
+
+        function renderHeader() {
+            const authLinks = document.getElementById('auth-links');
+            const user = getCurrentUser();
+            if (!authLinks) return;
+            if (user && user.username) {
+                authLinks.innerHTML = `
+                    <span style="font-weight:600; color:#333; margin-right:12px;">Xin chào, ${user.username}</span>
+                    <a href="#" onclick="logout()" class="login-btn" style="border-color:#ff6b35;">Đăng xuất</a>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="dangnhap.html" class="login-btn">ĐĂNG NHẬP</a>
+                    <a href="dangky.html" class="signup-btn">ĐĂNG KÝ</a>
+                `;
+            }
+        }
+
+        function getSavedRooms() {
+            try {
+                const saved = localStorage.getItem(roomsKey);
+                return saved ? JSON.parse(saved) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function saveRooms() {
+            localStorage.setItem(roomsKey, JSON.stringify(rooms));
+        }
+
+        function formatCurrency(value) {
+            const number = Number(value.toString().replace(/[^0-9.-]+/g, ''));
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0,
+            }).format(number);
+        }
+
+        function renderRooms() {
+            const list = document.getElementById('room-list');
+            list.innerHTML = '';
+
+            if (!rooms.length) {
+                list.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="border:1px solid #ddd; padding:16px; text-align:center; color:#666;">Chưa có phòng nào. Hãy thêm phòng mới.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            rooms.forEach((room) => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td style="border:1px solid #ddd; padding:8px;">${room.id}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${room.type}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${formatCurrency(room.price)}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${room.status}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">
+                        <button onclick="viewDetails('${room.id}')">Xem</button>
+                        <button onclick="editRoom('${room.id}')">Sửa</button>
+                        <button onclick="deleteRoom('${room.id}')">Xóa</button>
+                        <button onclick="updateStatus('${room.id}')">Cập nhật trạng thái</button>
+                    </td>
+                `;
+
+                list.appendChild(tr);
+            });
+        }
+
+        function resetForm() {
+            editingRoomId = null;
+            document.getElementById('form-title').innerText = 'Thêm phòng';
+            document.getElementById('room-id').value = '';
+            document.getElementById('room-id').disabled = false;
+            document.getElementById('room-type').value = '';
+            document.getElementById('room-price').value = '';
+            document.getElementById('room-status').value = 'Trống';
+        }
+
+        function showAddForm() {
+            resetForm();
+            document.getElementById('room-form').style.display = 'block';
+        }
+
+        function hideForm() {
+            document.getElementById('room-form').style.display = 'none';
+        }
+
+        function saveRoom(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('room-id').value.trim();
+            const type = document.getElementById('room-type').value.trim();
+            const price = document.getElementById('room-price').value.trim();
+            const status = document.getElementById('room-status').value;
+
+            if (!id || !type || !price) {
+                alert('Vui lòng điền đầy đủ thông tin.');
+                return;
+            }
+
+            if (editingRoomId) {
+                const index = rooms.findIndex((r) => r.id === editingRoomId);
+                if (index !== -1) {
+                    rooms[index] = { id, type, price, status };
+                    alert('Cập nhật phòng thành công.');
+                }
+            } else {
+                const exists = rooms.some((r) => r.id === id);
+                if (exists) {
+                    alert('Mã phòng đã tồn tại. Vui lòng chọn mã khác.');
+                    return;
+                }
+
+                rooms.push({ id, type, price, status });
+                alert('Thêm phòng mới thành công.');
+            }
+
+            saveRooms();
+            renderRooms();
+            hideForm();
+        }
+
+        function viewDetails(id) {
+            const room = rooms.find((r) => r.id === id);
+            if (!room) {
+                alert('Không tìm thấy phòng.');
+                return;
+            }
+
+            alert(`Mã phòng: ${room.id}\nLoại: ${room.type}\nGiá: ${formatCurrency(room.price)}\nTrạng thái: ${room.status}`);
+        }
+
+        function editRoom(id) {
+            const room = rooms.find((r) => r.id === id);
+            if (!room) {
+                alert('Không tìm thấy phòng.');
+                return;
+            }
+
+            editingRoomId = id;
+            document.getElementById('form-title').innerText = 'Sửa phòng ' + id;
+            document.getElementById('room-id').value = room.id;
+            document.getElementById('room-id').disabled = true;
+            document.getElementById('room-type').value = room.type;
+            document.getElementById('room-price').value = room.price;
+            document.getElementById('room-status').value = room.status;
+            document.getElementById('room-form').style.display = 'block';
+        }
+
+        function deleteRoom(id) {
+            if (!confirm('Bạn có chắc muốn xóa phòng ' + id + '?')) return;
+
+            rooms = rooms.filter((r) => r.id !== id);
+            saveRooms();
+            renderRooms();
+            alert('Phòng ' + id + ' đã bị xóa.');
+        }
+
+        function updateStatus(id) {
+            const room = rooms.find((r) => r.id === id);
+            if (!room) {
+                alert('Không tìm thấy phòng.');
+                return;
+            }
+
+            room.status = room.status === 'Trống' ? 'Đang thuê' : 'Trống';
+            saveRooms();
+            renderRooms();
+        }
+
+        function init() {
+            const saved = getSavedRooms();
+            if (saved && Array.isArray(saved)) {
+                rooms = saved;
+            } else {
+                rooms = [
+                    { id: 'P001', type: 'Đơn', price: '3000000', status: 'Trống' },
+                    { id: 'P002', type: 'Đơn', price: '3000000', status: 'Trống' },
+                    { id: 'P003', type: 'Đơn', price: '3000000', status: 'Trống' },
+                ];
+                saveRooms();
+            }
+
+            renderRooms();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            requireLogin();
+            renderHeader();
+            init();
+        });
+    </script>
+</body>
+</html>
